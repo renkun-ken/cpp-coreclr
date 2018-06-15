@@ -197,20 +197,20 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  bootstrap_ptr dele;
+  // Create the delegate to ManLib::Bootstrap()
+  bootstrap_ptr dele_bootstrap;
   ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
-                            "Bootstrap", reinterpret_cast<void **>(&dele));
+                            "Bootstrap",
+                            reinterpret_cast<void **>(&dele_bootstrap));
   if (ret < 0) {
     cerr << "couldn't create delegate. err = " << ret << endl;
     return -1;
   }
 
-  //
-  // Call the delegate
-  //
+  // Call the delegate to ManLib::Bootstrap()
   cout << "Calling ManLib::Bootstrap() through delegate..." << endl;
 
-  char *msg = dele();
+  char *msg = dele_bootstrap();
   cout << "ManLib::Bootstrap() returned " << msg << endl;
   free(msg); // returned string need to be free-ed
 
