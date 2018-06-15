@@ -1,4 +1,4 @@
-# cpp-dotnet
+# cpp-coreclr
 
 Calling .NET Core methods from C++
 
