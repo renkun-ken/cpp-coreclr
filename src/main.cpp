@@ -1,3 +1,4 @@
+#include "coreclrhost.h"
 #include <dirent.h>
 #include <dlfcn.h>
 #include <iostream>
@@ -7,9 +8,13 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "coreclrhost.h"
-
 using namespace std;
+
+#ifdef __linux__
+const string libcoreclr = "libcoreclr.so";
+#elif __APPLE__
+const string libcoreclr = "libcoreclr.dylib";
+#endif
 
 typedef char *(*bootstrap_ptr)();
 
@@ -130,7 +135,8 @@ int main(int argc, char *argv[]) {
   // Load CoreCLR
   //
   string coreclr_path(pkg_path);
-  coreclr_path.append("/libcoreclr.so");
+  coreclr_path.append("/");
+  coreclr_path.append(libcoreclr);
 
   cout << "coreclr_path:" << coreclr_path.c_str() << endl;
 
