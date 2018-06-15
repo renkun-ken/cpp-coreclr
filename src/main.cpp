@@ -17,6 +17,8 @@ const string libcoreclr = "libcoreclr.dylib";
 #endif
 
 typedef char *(*bootstrap_ptr)();
+typedef double (*plus_ptr)(double x, double y);
+typedef double (*sum_ptr)(double *x, int n);
 
 void AddFilesFromDirectoryToTpaList(const char *directory,
                                     std::string &tpaList) {
@@ -197,22 +199,61 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  // Create the delegate to ManLib::Bootstrap()
-  bootstrap_ptr dele_bootstrap;
-  ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
-                            "Bootstrap",
-                            reinterpret_cast<void **>(&dele_bootstrap));
-  if (ret < 0) {
-    cerr << "couldn't create delegate. err = " << ret << endl;
-    return -1;
+  {
+    // Create the delegate to ManLib::Bootstrap()
+    bootstrap_ptr dele_bootstrap;
+    ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
+                              "Bootstrap",
+                              reinterpret_cast<void **>(&dele_bootstrap));
+    if (ret < 0) {
+      cerr << "couldn't create delegate. err = " << ret << endl;
+      return -1;
+    }
+
+    // Call the delegate to ManLib::Bootstrap()
+    cout << "Calling ManLib::Bootstrap() through delegate..." << endl;
+
+    char *msg = dele_bootstrap();
+    cout << "ManLib::Bootstrap() returned " << msg << endl;
+    free(msg); // returned string need to be free-ed
   }
 
-  // Call the delegate to ManLib::Bootstrap()
-  cout << "Calling ManLib::Bootstrap() through delegate..." << endl;
+  {
+    // Create the delegate to ManLib::Plus()
+    plus_ptr dele_plus;
+    ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
+                              "Plus", reinterpret_cast<void **>(&dele_plus));
+    if (ret < 0) {
+      cerr << "couldn't create delegate. err = " << ret << endl;
+      return -1;
+    }
 
-  char *msg = dele_bootstrap();
-  cout << "ManLib::Bootstrap() returned " << msg << endl;
-  free(msg); // returned string need to be free-ed
+    // Call the delegate to ManLib::Plus()
+    cout << "Calling ManLib::Plus() through delegate..." << endl;
+
+    double res = dele_plus(1, 2);
+    cout << "ManLib::Plus(1, 2) returned " << res << endl;
+  }
+
+  {
+    // Create the delegate to ManLib::Sum(double*, int)
+    sum_ptr dele_sum;
+    ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
+                              "Sum", reinterpret_cast<void **>(&dele_sum));
+    if (ret < 0) {
+      cerr << "couldn't create delegate. err = " << ret << endl;
+      return -1;
+    }
+
+    // Call the delegate to ManLib::Sum()
+    double nums[10];
+    for (int i = 0; i < 10; i++) {
+      nums[i] = i;
+    }
+    cout << "Calling ManLib::Sum() through delegate..." << endl;
+    double sum = dele_sum(nums, 10);
+    cout << "ManLib::Sum(1:10, 10) returned " << sum << endl;
+  }
 
   dlclose(coreclr);
 }
