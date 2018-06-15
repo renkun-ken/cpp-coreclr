@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
   }
 
   bootstrap_ptr dele;
-  ret = coreclr_create_dele(coreclr_handle, domain_id, "netlib", "NetLib",
+  ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
                             "Bootstrap", reinterpret_cast<void **>(&dele));
   if (ret < 0) {
     cerr << "couldn't create delegate. err = " << ret << endl;
