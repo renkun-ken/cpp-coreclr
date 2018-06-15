@@ -12,7 +12,7 @@ public class ManLib
         return x + y;
     }
 
-    public unsafe static double Sum(double* x, int n)
+    unsafe public static double Sum(double* x, int n)
     {
         double sum = 0;
         for (var i = 0; i < n; i++)
