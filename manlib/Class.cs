@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 public class ManLib
 {
@@ -20,5 +21,11 @@ public class ManLib
             sum += x[i];
         }
         return sum;
+    }
+
+    unsafe public static double Sum2(double* x, int n)
+    {
+        var span = new Span<double>(x, n);
+        return span.ToArray().Sum();
     }
 }

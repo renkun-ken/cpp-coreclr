@@ -255,5 +255,25 @@ int main(int argc, char *argv[]) {
     cout << "ManLib::Sum(1:10, 10) returned " << sum << endl;
   }
 
+  {
+    // Create the delegate to ManLib::Sum2(double*, int)
+    sum_ptr dele_sum;
+    ret = coreclr_create_dele(coreclr_handle, domain_id, "manlib", "ManLib",
+                              "Sum2", reinterpret_cast<void **>(&dele_sum));
+    if (ret < 0) {
+      cerr << "couldn't create delegate. err = " << ret << endl;
+      return -1;
+    }
+
+    // Call the delegate to ManLib::Sum()
+    double nums[10];
+    for (int i = 0; i < 10; i++) {
+      nums[i] = i;
+    }
+    cout << "Calling ManLib::Sum2() through delegate..." << endl;
+    double sum = dele_sum(nums, 10);
+    cout << "ManLib::Sum2(1:10, 10) returned " << sum << endl;
+  }
+
   dlclose(coreclr);
 }
