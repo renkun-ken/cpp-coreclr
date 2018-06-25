@@ -8,14 +8,12 @@ Use `./build.sh` to build the project.
 
 Run `build/main` with the directory that contains CoreCLR dynamic libraries, which is usually found as following:
 
-## Linux
-
-```text
-/opt/dotnet/shared/Microsoft.NETCore.App
+```sh
+dotnet --list-runtimes
 ```
 
-## MacOS
+For example, on Ubuntu 18.04:
 
-```text
-/usr/local/share/dotnet/shared/Microsoft.NETCore.App
+```sh
+build/main /usr/share/dotnet/shared/Microsoft.NETCore.App
 ```
