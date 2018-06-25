@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(cpp-dotnet)
+project(cpp-coreclr)
 
 add_compile_options(-fPIE)
 
